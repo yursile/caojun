@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="http://news.sohu.com/upload/yursile/svgtest/rem/style.css">
+  <title>h5_pixi</title>
+
+</head>
+<!-- 预加载所需库 -->
+<!-- <script src="http://news.sohu.com/upload/yifengjiashuzzx/js/preload.js"></script> -->
+
+<script>
+    var html = document.documentElement;
+    var windowWidth = html.clientWidth;
+    html.style.fontSize = windowWidth / 6.4 + 'px';
+     
+    //为canvas缩放，使用640*1136
+    function pageUtil(selector){
+      this.ele = document.querySelectorAll(selector)[0];
+      this.scaleNum = document.documentElement.clientWidth/640;
+      return this;
+    }
+    pageUtil.prototype.response = function(selector){
+          this.ele.style.cssText = "-webkit-transform-origin: 0 0 0px; -webkit-transform: scale("+this.scaleNum+");position: absolute;width:640px;height:1136px";
+          return this;
+    }
+    pageUtil.prototype.rotate = function(){
+      this.ele["style"]["cssText"] = "width: "+1136+"px;height: "+640+"px;transform:rotate(90deg) translate(-50%,-50%);"+
+      "transform-origin:0 0; position: absolute; top: 50%; left: 50%;"
+      return this;
+    }
+</script>
+<body ontouchmove="event.preventDefault();" >
+
+  <object data="./svg/content.svg" type="image/svg+xml" id="icon"></object>
+  <div id="options" style="display:none">
+    <div class="option">
+      <label for="selIcon">Icon:</label>
+      <select id="selIcon"></select>
+    </div>
+    <div class="option">
+      <label for="selEasing">Easing:</label>
+      <select id="selEasing"></select>
+    </div>
+    <div class="option">
+      <label for="selDuration">Duration:</label>
+      <select id="selDuration"></select>
+    </div>
+    <div class="option">
+      <label for="selRotation">Rotation:</label>
+      <select id="selRotation"></select>
+    </div>
+  </div>  
+
+
+
+</body>
+
+<script type="text/javascript" src="http://news.sohu.com/upload/yursile/svgtest//js/svg-morpheus.js"></script>
+
+ <script type="text/javascript">
+    window.onload = function() {
+
+   
+
+
+      var svgMorpheus = new SVGMorpheus('#icon');
+        
+      svgMorpheus.to("page2")
+    };
+  </script>
+</html>

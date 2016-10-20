@@ -1,6 +1,11 @@
 var canvas, stage, streaming;
 
-var POINTS = [4300,9300,13800,18100,22100,26100,30000,32900,35900,38900,41300,43700];
+// POINTS = [4404,9267,13628,18300,22311,26296,29742,33170,35995,38822,40820,42844];
+var POINTS = [4404,9267,13658,18050,22050,26150,29642,33070,35850,38652,40820,42844];
+
+//difficult coefficient
+var COE = [100,90,80,70,60,50,40,30,20,15,10,5]
+var ALLTURN = POINTS.length;
 var VARY_POINTS = POINTS.map(function(v,i,l){
     // if(i>0)
     return l[i+1] - v;
@@ -14,12 +19,12 @@ VARY_POINTS.unshift(POINTS[0])
 //one trick time
 // var TIME = 44000;
 // var RANGE = 500;
-var PERFECT_RANGE = 200;
+var PERFECT_RANGE = 100;
 
-var SHOW_TIME = 1000;
+var SHOW_TIME = 600;
 
 //first waterClip time 
-var FIRST_WATER = 2100;
+var FIRST_WATER = 3100;
 var FIRST_WAIT = VARY_POINTS[0]-SHOW_TIME-FIRST_WATER;
 
 
@@ -77,7 +82,7 @@ var Game = {
     },
     //one turn result
     showResult:function(i){
-        console.log("first result time: "+ new Date().getTime());
+        // console.log("first result time: "+ new Date().getTime());
         var results = this.results;
         //hide doll
         Game.hideDoll();
@@ -91,20 +96,10 @@ var Game = {
         // store current result
         this.result = results[i];
 
-        //make sure streaming has stoped
-        // setTimeout(function(){
-        //   streaming.stop();
-        // },50);
-
-        //replace doll after show over
-        //now it was automatic set in enableClick
-
-        // Game.showDoll();
-
     },
 
     hideDoll:function(){
-        console.log("hideDoll")
+        // console.log("hideDoll")
         // stage.removeChild(streaming);
         streaming.visible = false;
         waterClip.stop();
@@ -114,6 +109,8 @@ var Game = {
     },
 
     grow:function(){
+        //clickable
+        Game.clickable = true;
         face.visible = false;
         streaming.visible = true;
         // streaming = new lib.streaming();
@@ -122,8 +119,8 @@ var Game = {
         waterClip.visible = true;    
         waterClip.gotoAndPlay(1);
         streaming.gotoAndPlay(1);
-        waterClip.framefrate = streaming.framefrate = Math.round(lib.properties.fps*WATER_TIME[Game.count]/FIRST_WATER);
-        console.log(streaming.framefrate);
+         waterClip.framerate = streaming.framerate = Math.round(lib.properties.fps*FIRST_WATER/WATER_TIME[Game.count]);
+        // console.log(streaming.framerate);
         streaming.play();
     },
 
@@ -131,8 +128,8 @@ var Game = {
     //when result show over
     //replace result with new streaming
     showDoll:function(){
-        console.log("show over" + new Date().getTime());
-        console.log("showdoll")
+        // console.log("show over" + new Date().getTime());
+        // console.log("showdoll")
         Game.count++;
         // console.log
 
@@ -144,7 +141,11 @@ var Game = {
 
         doll.visible = true;
         face.visible = true;
-        console.log("wait time : "+WAIT_TIME[Game.count]);
+        // console.log("wait time : "+WAIT_TIME[Game.count]);
+
+        if(Game.count == ALLTURN)
+            return;
+
         setTimeout(function(){
             Game.grow();
         },WAIT_TIME[Game.count]);
@@ -156,35 +157,57 @@ var Game = {
         // this.paused = false;
         pulse.gotoAndPlay(0);
 
-        // createjs.Sound.play("music", createjs.Sound.INTERRUPT_EARLY, 0, 0, false);
+        createjs.Sound.play("music", createjs.Sound.INTERRUPT_EARLY, 0, 0, false);
         this.timer = new Date().getTime();
 
 
         setTimeout(function(){
+            streaming.visible = true;
             streaming.gotoAndPlay(0);
             face.visible = false;
             waterClip.gotoAndPlay(0);
-            console.log("first streaming "+ streaming.framefrate)
+            // waterClip.framerate = 60;
+            console.log("first streaming "+ streaming.framerate)
+            Game.clickable = true;
         },SHOW_TIME+FIRST_WAIT);
 
         this.enableClick();
-        this.showFull();
-        this.clickable = true;
+        this.timeEvent();
+        
     },
 
-    //player failed to click
-    showFull:function(){
+    //automaticlly event based on time
+    timeEvent:function(){
         POINTS.forEach(function(v){
-
+            // force to showresult
             setTimeout(function(){
                 // if showResult has not excute
                 if(Game.clickable){
                     Game.showResult(2);
+                    console.log(new Date().getTime()-Game.timer);
                 }
-
             },v+PERFECT_RANGE);
+
+            // force to show doll
+             setTimeout(function(){     
+                Game.showDoll(); 
+            },v+SHOW_TIME);
+
+            setTimeout(function(){ 
+                // console.log(VARY_POINTS[Game.count]);
+                pulse.framerate = Math.round(lib.properties.fps*VARY_POINTS[0]/VARY_POINTS[Game.count+1]);
+                pulse.gotoAndPlay(1) 
+            },v+60);
+
+                         
         });
+
+        //force disable click
+        // setTimeout(function(){
+            
+        // });
     },
+
     enableClick:function(){
 
         var hit = new createjs.Shape();
@@ -197,55 +220,34 @@ var Game = {
             Game.clickHandler(Game.count);
         })
 
-        POINTS.forEach(function(v){
-            // clickable time
-            setTimeout(function(){
-                Game.clickable = true;
-                Game.showDoll(); 
 
-                //if no one click
-                // automatic reset the value
-                // setTimeout(function(){
-                //     Game.clickable = false;
-                // },v-SHOW_TIME);
-
-            },v+SHOW_TIME);
-
-
-
-
-            // replace doll time
-            // setTimeout(function(){
-            //     Game.showDoll(); 
-            // },v+SHOW_TIME);
-        });
     },
     clickHandler:function(i){
-        console.log(Game.getResult(i));
+        // console.log(Game.getResult(i));
         Game.showResult(Game.getResult(i));
-
-        console.log("click")
         Game.clickable = false;
     },
     getResult:function(i){
         var currentTime = new Date().getTime();
         var offsetTime = currentTime - Game.timer;
-        if(offsetTime+PERFECT_RANGE<POINTS[i]){
-            return 2
-        }else if(offsetTime-PERFECT_RANGE<POINTS[i]<offsetTime+PERFECT_RANGE){
+        if(offsetTime+COE[i]<POINTS[i]){
             return 1
+        }else if(offsetTime-COE[i]<POINTS[i]<offsetTime+COE[i]){
+            return 0
         }else{
-            return 3
+            return 2
         }
     }
 }
 
 function handleComplete(evt) {
 	streaming = new lib.streaming();
+    streaming.visible = false;
     Game.init();
 
     doll = new lib.doll();
     pulse = new lib.pulse();
+    // pulse.framerate = 25;
     face = new lib.face();
     var background = new lib.bg();
     var waterpipe = new lib.Waterpipe();
@@ -262,6 +264,8 @@ function handleComplete(evt) {
     stage.addChild(pulse);
     // WATER PIPE
 	stage.addChild(waterpipe);
+
+    createjs.Touch.enable(stage);
 
     // setTimeout(function(){
     //     //showresult

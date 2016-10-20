@@ -2,23 +2,340 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>index</title>
+<style>
+    *{
+        margin:0;
+        padding:0;
+    }
+    html,body,#canvas,#prelude{
+        width:100%;
+        /*height:100%;*/
+        /*overflow:hidden;*/
+    }
+    body{
+       background-color:#D4D4D4;
+       max-width:640px;
+       margin:0 auto;
+    }
+    #svg,#cover,#comic,#content{
+        width:100%;
+    }
+
+    #hu{
+        -webkit-transform-origin:center;
+        transform-origin:center;
+        transform:translateY(500px) scale(0.1);
+    }
+
+    #hu.animate{
+        transform:translateY(0) scale(1);
+        transition:all 0.4s linear;
+    }
+
+    #doll1,#aha{
+        opacity:0;
+    }
+
+    #page2{
+        opacity:0;
+        /*-webkit-transform:translateY(-1000px);*/
+    }
+
+    #page3{
+        opacity:0;
+        /*-webkit-transform:translateY(-2000px);*/
+    }
+
+</style>
+
 
 <script src="http://code.createjs.com/easeljs-0.8.1.min.js"></script>
 <script src="http://code.createjs.com/tweenjs-0.6.1.min.js"></script>
 <script src="http://code.createjs.com/movieclip-0.8.1.min.js"></script>
 <script src="http://code.createjs.com/preloadjs-0.6.1.min.js"></script>
 <script src="http://code.createjs.com/soundjs-0.6.1.min.js"></script>
-<script src="streaming.js"></script>
-<script src="doll.js"></script>
+<script src="./streaming.js"></script>
+<script src="./doll.js"></script>
 <!--<script src="pulse.js"></script>-->
-<script src="result.js"></script>
-<script src="background.js"></script>
-<script src="index.js"></script>
+<script src="./result.js"></script>
+<script src="./background.js"></script>
+<!--<script src="./index.js"></script>-->
+
+
+<script src="http://news.sohu.com/upload/yursile/svgtest/js/svg-morpheus.js"></script>
+<script src="./lib/snap.svg-min.js"></script>
+<script src="http://news.sohu.com/upload/yursile/svgtest/js/vivus.min.js"></script>
+
 
 </head>
 
-<body  style="background-color:#D4D4D4">
+<body > 
+    <div id="prelude">
+        <!--<object data="svg/cover.svg"  
+        type="image/svg+xml"
+        codebase="http://www.adobe.com/svg/viewer/install/" id="cover"/>-->
+        <div id="contentBox"></div>
+        <div id="cover"></div>
+
+
+        <script>
+              Snap.load("svg/content.svg",function(d){
+                Snap("#contentBox").append(d);
+            })
+        </script>
+        <object data="svg/comic.svg"  
+        type="image/svg+xml"
+        codebase="http://www.adobe.com/svg/viewer/install/" id="comic"/>
+
+
+
+     
+    </div>
+
 	<canvas id="canvas" width="640" height="1136" style="background-color:#FFFFFF"></canvas>
+
+
+
+
+    <script>
+
+        // Snap.load("svg/content.svg",function(d){
+        //     Snap("#content").append(d);
+        //     console.log(d)
+        // })
+
+
+        (function(){
+
+            function ComicAnimate(ele){
+                this.ele = ele;
+                this.duration = 2000;
+                return this;
+            }
+
+            ComicAnimate.LEFT = "-400";
+            ComicAnimate.RIGHT = "400";
+            ComicAnimate.TOP = "-400";
+            ComicAnimate.BOTTOM = "400";
+
+
+
+            //to("left","top")
+            ComicAnimate.prototype.to = function(){
+                if(arguments.length!==0){
+                    var horizontal = this.horizotal = arguments[0];
+                    var vertical = this.vertical = arguments[1] || 0;
+
+                    this.ele.transform("translate("+horizontal+","+vertical+")");
+                    return this;
+                }
+            }
+
+            ComicAnimate.prototype.play = function(){
+                this.ele.animate({ transform:'translate(0,0)'}, 700);
+            }
+
+            window.ComicAnimate = ComicAnimate;
+        })();
+        
+
+        window.onload = function(){
+            v = new Vivus('cover', {duration: 190,type:"oneByOne",start:"manual",file: 'svg/cover.svg',onReady: function (myVivus) {
+                    v.play();
+                } 
+            });
+
+            //letter fadeIn
+            var comicSVG = Snap("#comic");
+            var timer = 0;
+            comicSVG.selectAll("#index path").forEach(function(v,i){
+                v.attr({opacity:0})
+                setTimeout(function(){
+                    v.animate({opacity:1},1000);
+                  
+                },timer);
+                timer += 100;
+            })
+
+            ccSVG = Snap("#content");
+            // ccSVG.select("#hu").transform("scale(0.01)");
+            // setTimeout(function(){
+
+            //     ccSVG.select("#hu").animate({transform:"scale(1)"},300,function(){
+            //         ccSVG.select("#doll1").animate({opacity:1},200);
+            //     });
+            // },1000);
+
+
+            // (function(){
+            //      var lines = [];
+            //      var wordl = ccSVG.selectAll("#doc_2 path").length;
+            //      var originLines = ccSVG.selectAll("#path path");
+            //      var linePerWord = l/5;
+                 
+            //       for(var i = 0;i<5;i++){
+                      
+            //           for(var j = 0;j<linePerWord;j++){
+            //             lines.push(originLines[i].getSubPath(j*originLines[i]/linePerWord,(j+1)*originLines[i]/linePerWord);
+            //           }
+
+            //         //   lines.push()
+            //       }
+
+            //       for(var i = 0;i<lines.length;i++){
+            //           ccSVG.apped(Snap.)
+            //       }
+
+            //       ss.animate(
+            //           {d:ccSVG.select("#page3 path:nth-child("+j+")").attr("d"),
+            //             fill:"#040000",
+            //             stroke:"initial",
+            //             "stroke-width":"1"
+            //         },1000)
+            // })();
+           
+            function wordConvert(){
+                var wordl = ccSVG.selectAll("#doc_2_ path").length;
+                var timer = 1;
+                var linePerWord = wordl/5;
+                // ccSVG.select("#path path:nth-child(1)").animate({
+                //     d:ccSVG.select("#doc_2_ path:nth-child(1)").attr("d"),
+                // fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
+
+                // ccSVG.select("#path path:nth-child(2)").animate({
+                //     d:ccSVG.select("#doc_2_ path:nth-child(2)").attr("d"),
+                // fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
+
+                for(var i = 1;i<=5;i++){
+                      ccSVG.select("#path path:nth-child("+i+")").animate({d:ccSVG.select("#doc path:nth-child("+i+")").attr("d"),style:'fill:#040000'},500)
+                    // for(var j = 1;j<=linePerWord;j++){
+                    //     // lines.push(originLines[i].getSubPath(j*originLines[i]/linePerWord,(j+1)*originLines[i]/linePerWord);
+                    //     ccSVG.select("#path path:nth-child("+i+")").clone().animate({d:ccSVG.select("#doc_2_ path:nth-child("+timer+")").attr("d"),fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
+                    //     timer++;
+                    // }
+                }
+                setTimeout(function(){
+                    var timer = 0;
+                    ccSVG.selectAll("#doc path").forEach(function(v,i){
+                        if(i<5) return;
+                        setTimeout(function(){
+                            // v.animate({opacity:1},1000);
+                            page2Path.append(v);
+                        },timer);
+                        timer += 20;
+
+                    });
+                },500);
+
+                var page2Path = ccSVG.select("#path");
+                
+
+                ccSVG.selectAll("#save path").forEach(function(v,i){
+                    var j = i+1;
+                    v.animate({d:ccSVG.select("#start path:nth-child("+j+")").attr("d")},500);
+                });
+
+                setTimeout(function(){
+                    replaceWord();
+                    replaceNotice();
+                },600);
+
+                function replaceWord(){
+                    ccSVG.selectAll("#save path").forEach(function(v,i){
+                        var j = i+1;
+                        v.attr({d:ccSVG.select("#start path:nth-child("+j+")").attr("d")});
+                    });
+                }
+
+                function replaceNotice(){
+                    ccSVG.select("#page2").use(ccSVG.select("#notice"));
+                    ccSVG.select("#saveNotice").attr({opacity:0})
+                }
+            }
+                
+
+            //content animate            
+            document.querySelector("#hu").setAttribute("class","animate");
+            setTimeout(function(){
+                ccSVG.select("#doll1").animate({opacity:1},400,function(){
+                     ccSVG.select("#aha").animate({opacity:1},400,function(){
+                         setTimeout(function(){
+                             ccSVG.select("#page1").animate({"opacity":"0"},200);
+                             ccSVG.select("#page2").animate({"opacity":"1"},200);
+
+
+
+                             setTimeout(function(){
+                                 wordConvert();
+                                //  var ss = ccSVG.select("#path path:first-child").clone();
+                                //  ccSVG.select("#path").append(ss);
+
+                                //  ccSVG.select("#path").append(ccSVG.select("#path path:first-child").clone())
+                                //  ccSVG.select("#path").append(ccSVG.select("#path path:first-child").clone())
+
+                                //  ccSVG.select("#path path:first-child").animate({d:ccSVG.select("#page3 #XMLID_690_").attr("d"),fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
+                                //  ccSVG.select("#path path:first-child").clone().animate({d:ccSVG.select("#page3 #XMLID_673_").attr("d"),fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
+                                //  ss.animate({d:ccSVG.select("#page3 #XMLID_684_").attr("d"),fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
+                             },2000);
+
+                         },1000)
+                     });
+                });
+            },400);
+
+            var comics = [];
+    
+            // comics.push(new ComicAnimate(comicSVG.select("#comic1")).to(ComicAnimate.LEFT));
+            // comics.push(new ComicAnimate(comicSVG.select("#comic2")).to(ComicAnimate.RIGHT));
+            // comics.push(new ComicAnimate(comicSVG.select("#comic3")).to(ComicAnimate.LEFT));
+            // comics.push(new ComicAnimate(comicSVG.select("#comic4")).to(ComicAnimate.LEFT));
+            // comics.push(new ComicAnimate(comicSVG.select("#comic5")).to(ComicAnimate.RIGHT));
+            // comics.push(new ComicAnimate(comicSVG.select("#comic6")).to(ComicAnimate.LEFT,ComicAnimate.UP));
+            // comics.push(new ComicAnimate(comicSVG.select("#comic7")).to(ComicAnimate.LEFT,ComicAnimate.UP));
+            // comics.push(new ComicAnimate(comicSVG.select("#comic8")).to(ComicAnimate.LEFT,ComicAnimate.UP));
+            // comics.push(new ComicAnimate(comicSVG.select("#comic9")).to(ComicAnimate.LEFT,ComicAnimate.UP));
+
+            for (var k = 1;k<10;k++){
+                comics.push(comicSVG.select("#comic"+k));
+            }
+            
+
+            var comicTimer = 0;
+            comics.forEach(function(v){
+                // setTimeout(function(){
+                //     v.play(); 
+                // },comicTimer);
+                // comicTimer += 1000;
+
+
+                v.attr({opacity:0})
+                setTimeout(function(){
+                    v.animate({opacity:1},1000);
+                  
+                },comicTimer);
+                comicTimer += 500;
+            })
+
+            // setTimeout(function(){
+            //     c1.play()
+            // },2000);
+
+
+            // ss = Snap("#svg");
+            // ss.select("#saveBtn polygon").touchstart(function(){
+            //     var span = ss.select("#page3");
+            //     span.animate({opacity:0.25},400)
+            //     ss.select("#save path:first-child").animate({d:ss.select("#save path:nth-child(2)").attr("d")},1000)
+            // });
+            // document.getElementById("svg").contentDocument.getElementById("saveBtn").addEventListener("touchstart",function(){
+        
+            // },false)
+
+        }
+
+
+    </script>
 </body>
 </html>
