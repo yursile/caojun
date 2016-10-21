@@ -4,107 +4,88 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>index</title>
-<style>
-    *{
-        margin:0;
-        padding:0;
-    }
-    html,body,#canvas,#prelude{
-        width:100%;
-        /*height:100%;*/
-        /*overflow:hidden;*/
-    }
-    body{
-       background-color:#D4D4D4;
-       max-width:640px;
-       margin:0 auto;
-    }
-    #svg,#cover,#comic,#content{
-        width:100%;
-    }
-
-    #hu{
-        -webkit-transform-origin:center;
-        transform-origin:center;
-        transform:translateY(500px) scale(0.1);
-    }
-
-    #hu.animate{
-        transform:translateY(0) scale(1);
-        transition:all 0.4s linear;
-    }
-
-    #doll1,#aha{
-        opacity:0;
-    }
-
-    #page2{
-        opacity:0;
-        /*-webkit-transform:translateY(-1000px);*/
-    }
-
-    #page3{
-        opacity:0;
-        /*-webkit-transform:translateY(-2000px);*/
-    }
-
-</style>
+<link rel="stylesheet" href="./index.css">
 
 
-<script src="http://code.createjs.com/easeljs-0.8.1.min.js"></script>
-<script src="http://code.createjs.com/tweenjs-0.6.1.min.js"></script>
-<script src="http://code.createjs.com/movieclip-0.8.1.min.js"></script>
-<script src="http://code.createjs.com/preloadjs-0.6.1.min.js"></script>
-<script src="http://code.createjs.com/soundjs-0.6.1.min.js"></script>
+<script src="./lib/easeljs-0.8.1.min.js"></script>
+<script src="./lib/tweenjs-0.6.1.min.js"></script>
+<script src="./lib/movieclip-0.8.1.min.js"></script>
+<script src="./lib/preloadjs-0.6.1.min.js"></script>
+<script src="./lib/soundjs-0.6.1.min.js"></script>
+<script src="./lib/anime.min.js"></script>
 <script src="./streaming.js"></script>
 <script src="./doll.js"></script>
 <!--<script src="pulse.js"></script>-->
 <script src="./result.js"></script>
 <script src="./background.js"></script>
-<!--<script src="./index.js"></script>-->
+
+<script src="./index.js"></script>
+<script src="http://news.sohu.com/upload/ky/resloader.js"></script>
 
 
 <script src="http://news.sohu.com/upload/yursile/svgtest/js/svg-morpheus.js"></script>
 <script src="./lib/snap.svg-min.js"></script>
 <script src="http://news.sohu.com/upload/yursile/svgtest/js/vivus.min.js"></script>
 
-
 </head>
 
-<body > 
-    <div id="prelude">
-        <!--<object data="svg/cover.svg"  
-        type="image/svg+xml"
-        codebase="http://www.adobe.com/svg/viewer/install/" id="cover"/>-->
-        <div id="contentBox"></div>
+<body ontouchstart = "event.preventDefault()"> 
+    <div id="GradeBox">
+        <div class="btns">
+            <div class="share"></div>
+            <div class="again"></div>
+        </div>
+        <div id="Grade"></div>
+    </div>
+    <div id="shareBox">
+        <div id="shareCover">
+        </div>
+        <div class="ewm"><img src="./images/ewm.jpg" alt=""></div>
+    </div>
+    <canvas id="canvas" width="640" height="1136" style="background-color:#FFFFFF"></canvas>
+
+    <div id="prelude"> 
         <div id="cover"></div>
-
-
+        <div id="contentBox"></div>
         <script>
               Snap.load("svg/content.svg",function(d){
                 Snap("#contentBox").append(d);
             })
         </script>
-        <object data="svg/comic.svg"  
-        type="image/svg+xml"
-        codebase="http://www.adobe.com/svg/viewer/install/" id="comic"/>
+        
+        <div id="comicBBox">
+            <object data="svg/comic.svg"  
+            type="image/svg+xml"
+            codebase="http://www.adobe.com/svg/viewer/install/" id="comicBox"/>
 
+        </div>
 
-
+        
      
     </div>
 
-	<canvas id="canvas" width="640" height="1136" style="background-color:#FFFFFF"></canvas>
-
-
-
-
     <script>
 
-        // Snap.load("svg/content.svg",function(d){
-        //     Snap("#content").append(d);
-        //     console.log(d)
-        // })
+        new pageUtil("#GradeBox").response();
+        new pageUtil("#shareBox").response();
+        document.querySelector(".share").ontouchstart=function(){
+            document.querySelector("#shareBox").style.display = "block"
+        }
+        document.querySelector("#shareBox").ontouchstart=function(){
+            this.style.display = "none"
+        }
+        document.querySelector(".again").ontouchstart = function(e){
+            document.querySelector("#GradeBox").style.display = "none";
+
+            Game.again();
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("again")
+        }
+        document.querySelector(".ewm").ontouchstart = function(e){
+            e.stopPropagation();
+        }
+        var comicSVG,ccSVG;
 
 
         (function(){
@@ -137,91 +118,207 @@
                 this.ele.animate({ transform:'translate(0,0)'}, 700);
             }
 
+            
+
             window.ComicAnimate = ComicAnimate;
         })();
-        
 
-        window.onload = function(){
-            v = new Vivus('cover', {duration: 190,type:"oneByOne",start:"manual",file: 'svg/cover.svg',onReady: function (myVivus) {
-                    v.play();
-                } 
-            });
+        (function(){
+            function ComicToll(fn){
+                this.onEnd = fn;
+                // this.comics = comics;
+                this.root = document.querySelector("#comicBBox");
+                this.height = Math.round(this.root.getBoundingClientRect().bottom-document.documentElement.clientHeight);
+                // this.currentComic 
+                this.lengths = [1410,1950,2100,2340,2640];
+                this.comicTime = 800;
+                this.halt = 800;
 
-            //letter fadeIn
-            var comicSVG = Snap("#comic");
-            var timer = 0;
-            comicSVG.selectAll("#index path").forEach(function(v,i){
-                v.attr({opacity:0})
+                //
+                this.blockNum = 0;
+                this.comicNum = 0;
+                this.blocks = [3,2,1,1,1,1]
+
+                var comics = this.comics =  []; 
+                for (var k = 1;k<10;k++){
+                    comics.push(comicSVG.select("#comic"+k).attr({opacity:0}));
+                }
+            }
+            ComicToll.prototype.start = function(){
+                for(var i = 0;i<this.blocks[this.blockNum];i++){
+                    setTimeout(function(){
+                        this.showComic();
+                    }.bind(this),i*this.comicTime);
+                }
+                this.blockNum++;
                 setTimeout(function(){
-                    v.animate({opacity:1},1000);
-                  
-                },timer);
-                timer += 100;
-            })
+                    this.slide();
+                }.bind(this),2000);
+            }
 
-            ccSVG = Snap("#content");
-            // ccSVG.select("#hu").transform("scale(0.01)");
-            // setTimeout(function(){
+            ComicToll.prototype.slide = function(){
+                this.root.style.cssText = "-webkit-transform:translate3d(0,-"+
+                parseInt((this.lengths[this.blockNum-1]-1008)*document.documentElement.clientWidth/640) 
+                +"px,0);opacity:1";
 
-            //     ccSVG.select("#hu").animate({transform:"scale(1)"},300,function(){
-            //         ccSVG.select("#doll1").animate({opacity:1},200);
-            //     });
-            // },1000);
+                for(var i = 0;i<this.blocks[this.blockNum];i++){
+                    setTimeout(function(){
+                        this.showComic();
+                    }.bind(this),i*this.comicTime);
+                }
+
+                if(this.blockNum !==this.blocks.length-1){
+                    setTimeout(function(){
+                        this.slide();
+                    }.bind(this),this.comicTime*this.blocks[this.blockNum]+this.halt);
+                    this.blockNum++;
+                }else{
+                    setTimeout(function(){
+                        this.onEnd();
+                    }.bind(this),this.comicTime*this.blocks[this.blockNum]+this.halt);
+                }
+                
+            }
+            ComicToll.prototype.showComic = function(){
+                this.comics[this.comicNum++].animate({opacity:1},1000,function(){
+                });
+            }
 
 
-            // (function(){
-            //      var lines = [];
-            //      var wordl = ccSVG.selectAll("#doc_2 path").length;
-            //      var originLines = ccSVG.selectAll("#path path");
-            //      var linePerWord = l/5;
-                 
-            //       for(var i = 0;i<5;i++){
-                      
-            //           for(var j = 0;j<linePerWord;j++){
-            //             lines.push(originLines[i].getSubPath(j*originLines[i]/linePerWord,(j+1)*originLines[i]/linePerWord);
-            //           }
+            window.ComicToll = ComicToll;
+        })()
 
-            //         //   lines.push()
-            //       }
+        var Wel = {
+            isSaveBtn:true,
+            index:function(){
+         
+                setTimeout(function(){
+                    Snap("#cover").touchstart(function(e){
+                        e.stopPropagation();
+                        e.preventDefault();
+                        Snap("#cover").animate({opacity:0},1500);
+                        // Snap("#comicBox").animate({opacity:1},1000);
+                        setTimeout(function(){
 
-            //       for(var i = 0;i<lines.length;i++){
-            //           ccSVG.apped(Snap.)
-            //       }
+                            document.querySelector("#comicBBox").style.opacity=1;
+                            Wel.comic();
+                            createjs.Sound.stop();
+                            createjs.Sound.play("sound2", createjs.Sound.INTERRUPT_EARLY, 0, 0, false);
+                        },500)
 
-            //       ss.animate(
-            //           {d:ccSVG.select("#page3 path:nth-child("+j+")").attr("d"),
-            //             fill:"#040000",
-            //             stroke:"initial",
-            //             "stroke-width":"1"
-            //         },1000)
-            // })();
-           
-            function wordConvert(){
+                        Snap("#cover").untouchstart(arguments.callee);
+                    });
+                },2000)
+            },
+            comic:function(){
+                /** 
+                 * comic word
+                 * */
+                var timer = 0;
+                comicSVG.selectAll("#index path").forEach(function(v,i){
+                    v.attr({opacity:0})           
+                    setTimeout(function(){
+                        v.animate({opacity:1},1000);                
+                    },timer);
+                    timer += 100;
+                })
+                /**
+                 * comic
+                 * */
+
+
+                var katakanaStripes = anime({
+                    targets: document.getElementById("comicBox").getSVGDocument().querySelectorAll("#comic>g"),
+                    // targets:'#GradeBox>div',
+                    translateX: function(target) {
+                        // if (target.classList.contains('stripe-right')) return -1000;
+                        return -2000;
+                    },
+                    opacity: {
+                        value: 0,
+                        duration: 5000
+                    },
+                    fill: '#FFF',
+                    delay: function(t, i) { return 2200 + (i * 75) },
+                    duration: 400,
+                    delay:2000,
+                    direction: 'reverse',
+                    easing: 'easeOutExpo'
+                });
+
+                // var comicToll = new ComicToll(Wel.page1);
+                // setTimeout(function(){
+                //     comicToll.start();
+                // },2000);
+
+
+                // var comicDom = document.querySelector("#comicBBox");
+
+                // comicDom.style.cssText = "-webkit-transform:translateY(-"+Math.round(comicDom.getBoundingClientRect().bottom-document.documentElement.clientHeight)+"px);opacity:1";
+
+                // var comics = []; 
+                // for (var k = 1;k<10;k++){
+                //     comics.push(comicSVG.select("#comic"+k));
+                // }
+       
+                // var comicTimer = 0;
+                // comics.forEach(function(v){
+                //     v.attr({opacity:0})
+                //     setTimeout(function(){
+                //         v.animate({opacity:1},1000); 
+                //     },comicTimer);
+                //     comicTimer += 800;
+                // })
+                // setTimeout(function(){
+                //     Wel.page1();
+                // },10000);
+            },
+            page1:function(){
+                document.querySelector("#contentBox").style.opacity = 1;
+                document.querySelector("#comicBBox").style.opacity = 0;
+                document.querySelector("#hu").setAttribute("class","animate");
+                    setTimeout(function(){
+                        ccSVG.select("#doll1").animate({opacity:1},400,function(){
+                            ccSVG.select("#aha").animate({opacity:1},400,function(){
+                                ccSVG.select("#smg").animate({opacity:1},400);
+                                setTimeout(function(){
+                                    Wel.page2();
+                                },1500)
+                            });
+                        });
+                    },400);
+            },
+            page2:function(){
+                ccSVG.select("#page1").animate({"opacity":"0"},300);
+                ccSVG.select("#page2").animate({"opacity":"1"},800);
+                document.querySelector("#cover").style.display= "none";
+                document.querySelector("#comicBBox").style.display= "none";
+
+                ccSVG.select("#btn").touchstart(function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if(Wel.isSaveBtn){
+                        Wel.page3();
+                    }else{
+                        console.log("time to game");
+                        Game.setup();
+                        document.getElementById("canvas").style.display = "block";
+                    }
+                });
+            },
+            page3:function(){
+                Wel.isSaveBtn = false;
                 var wordl = ccSVG.selectAll("#doc_2_ path").length;
                 var timer = 1;
-                var linePerWord = wordl/5;
-                // ccSVG.select("#path path:nth-child(1)").animate({
-                //     d:ccSVG.select("#doc_2_ path:nth-child(1)").attr("d"),
-                // fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
-
-                // ccSVG.select("#path path:nth-child(2)").animate({
-                //     d:ccSVG.select("#doc_2_ path:nth-child(2)").attr("d"),
-                // fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
 
                 for(var i = 1;i<=5;i++){
                       ccSVG.select("#path path:nth-child("+i+")").animate({d:ccSVG.select("#doc path:nth-child("+i+")").attr("d"),style:'fill:#040000'},500)
-                    // for(var j = 1;j<=linePerWord;j++){
-                    //     // lines.push(originLines[i].getSubPath(j*originLines[i]/linePerWord,(j+1)*originLines[i]/linePerWord);
-                    //     ccSVG.select("#path path:nth-child("+i+")").clone().animate({d:ccSVG.select("#doc_2_ path:nth-child("+timer+")").attr("d"),fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
-                    //     timer++;
-                    // }
                 }
                 setTimeout(function(){
                     var timer = 0;
                     ccSVG.selectAll("#doc path").forEach(function(v,i){
                         if(i<5) return;
                         setTimeout(function(){
-                            // v.animate({opacity:1},1000);
                             page2Path.append(v);
                         },timer);
                         timer += 20;
@@ -229,18 +326,17 @@
                     });
                 },500);
 
+                //btn change
                 var page2Path = ccSVG.select("#path");
-                
-
                 ccSVG.selectAll("#save path").forEach(function(v,i){
                     var j = i+1;
-                    v.animate({d:ccSVG.select("#start path:nth-child("+j+")").attr("d")},500);
+                    v.animate({d:ccSVG.select("#start path:nth-child("+j+")").attr("d")},2000);
                 });
 
                 setTimeout(function(){
                     replaceWord();
                     replaceNotice();
-                },600);
+                },2100);
 
                 function replaceWord(){
                     ccSVG.selectAll("#save path").forEach(function(v,i){
@@ -254,86 +350,10 @@
                     ccSVG.select("#saveNotice").attr({opacity:0})
                 }
             }
-                
-
-            //content animate            
-            document.querySelector("#hu").setAttribute("class","animate");
-            setTimeout(function(){
-                ccSVG.select("#doll1").animate({opacity:1},400,function(){
-                     ccSVG.select("#aha").animate({opacity:1},400,function(){
-                         setTimeout(function(){
-                             ccSVG.select("#page1").animate({"opacity":"0"},200);
-                             ccSVG.select("#page2").animate({"opacity":"1"},200);
-
-
-
-                             setTimeout(function(){
-                                 wordConvert();
-                                //  var ss = ccSVG.select("#path path:first-child").clone();
-                                //  ccSVG.select("#path").append(ss);
-
-                                //  ccSVG.select("#path").append(ccSVG.select("#path path:first-child").clone())
-                                //  ccSVG.select("#path").append(ccSVG.select("#path path:first-child").clone())
-
-                                //  ccSVG.select("#path path:first-child").animate({d:ccSVG.select("#page3 #XMLID_690_").attr("d"),fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
-                                //  ccSVG.select("#path path:first-child").clone().animate({d:ccSVG.select("#page3 #XMLID_673_").attr("d"),fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
-                                //  ss.animate({d:ccSVG.select("#page3 #XMLID_684_").attr("d"),fill:"#040000",stroke:"initial","stroke-width":"1"},1000)
-                             },2000);
-
-                         },1000)
-                     });
-                });
-            },400);
-
-            var comics = [];
-    
-            // comics.push(new ComicAnimate(comicSVG.select("#comic1")).to(ComicAnimate.LEFT));
-            // comics.push(new ComicAnimate(comicSVG.select("#comic2")).to(ComicAnimate.RIGHT));
-            // comics.push(new ComicAnimate(comicSVG.select("#comic3")).to(ComicAnimate.LEFT));
-            // comics.push(new ComicAnimate(comicSVG.select("#comic4")).to(ComicAnimate.LEFT));
-            // comics.push(new ComicAnimate(comicSVG.select("#comic5")).to(ComicAnimate.RIGHT));
-            // comics.push(new ComicAnimate(comicSVG.select("#comic6")).to(ComicAnimate.LEFT,ComicAnimate.UP));
-            // comics.push(new ComicAnimate(comicSVG.select("#comic7")).to(ComicAnimate.LEFT,ComicAnimate.UP));
-            // comics.push(new ComicAnimate(comicSVG.select("#comic8")).to(ComicAnimate.LEFT,ComicAnimate.UP));
-            // comics.push(new ComicAnimate(comicSVG.select("#comic9")).to(ComicAnimate.LEFT,ComicAnimate.UP));
-
-            for (var k = 1;k<10;k++){
-                comics.push(comicSVG.select("#comic"+k));
-            }
-            
-
-            var comicTimer = 0;
-            comics.forEach(function(v){
-                // setTimeout(function(){
-                //     v.play(); 
-                // },comicTimer);
-                // comicTimer += 1000;
-
-
-                v.attr({opacity:0})
-                setTimeout(function(){
-                    v.animate({opacity:1},1000);
-                  
-                },comicTimer);
-                comicTimer += 500;
-            })
-
-            // setTimeout(function(){
-            //     c1.play()
-            // },2000);
-
-
-            // ss = Snap("#svg");
-            // ss.select("#saveBtn polygon").touchstart(function(){
-            //     var span = ss.select("#page3");
-            //     span.animate({opacity:0.25},400)
-            //     ss.select("#save path:first-child").animate({d:ss.select("#save path:nth-child(2)").attr("d")},1000)
-            // });
-            // document.getElementById("svg").contentDocument.getElementById("saveBtn").addEventListener("touchstart",function(){
-        
-            // },false)
-
         }
+        
+
+        
 
 
     </script>

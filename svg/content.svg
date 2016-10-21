@@ -2,12 +2,7 @@
 <svg version="1.1" id="content" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="100%" height="100%" viewBox="0 0 640 1136" style="enable-background:new 0 0 640 1136;" xml:space="preserve"
 	>
-<image style="overflow:visible;" width="640" height="1140" id="XMLID_1792_" xlink:href="../images/bg3.jpg"  transform="matrix(1 0 0 1 0 1038.2393)">
-</image>
-<image style="overflow:visible;" width="640" height="1140" id="XMLID_1757_" xlink:href="../images/bg3.jpg" >
-</image>
-<image style="overflow:visible;" width="640" height="1140" id="XMLID_1799_" xlink:href="../images/bg3.jpg"  transform="matrix(1 0 0 1 0 2001.6904)">
-</image>
+
 
 <g id="page1">
 	<g id="hu">
@@ -721,7 +716,7 @@
 				c-1.879,0-5.395,0.236-10.547,0.703C444.41,851.131,443.471,854.18,442.301,857.459z"/>
 		</g>
 		
-			<polygon id="XMLID_205_" style="fill:none;stroke:#040000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" points="
+			<polygon id="btn" style="fill:transparent;stroke:#040000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" points="
 			141.813,815.219 148.813,807.219 386.813,804.219 491.813,805.219 502.813,823.219 503.813,893.219 498.813,940.219 
 			407.813,950.219 166.813,950.219 140.813,933.219 		"/>
 		<g id="path">

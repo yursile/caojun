@@ -1,0 +1,165 @@
+    *{
+        margin:0;
+        padding:0;
+    }
+    body{
+        background:url(./images/bg3.jpg);
+        background-size: cover;
+    }
+    html,body,#prelude{
+        width:100%;
+        height:100%;
+        overflow:hidden;
+        
+    }
+    body{
+       /*background-color:#D4D4D4;*/
+       max-width:640px;
+       margin:0 auto;
+    }
+    #svg,#cover,#comicBox,#comicBBox,#content,#canvas{
+        width:100%;
+    }
+
+    #hu{
+        -webkit-transform-origin:center;
+        transform-origin:center;
+        -webkit-transform:translateY(500px) scale(0.01);
+    }
+
+    #hu.animate{
+        -webkit-transform:translateY(0) scale(1);
+        -webkit-transition:all 0.4s linear;
+    }
+
+    #doll1,#aha{
+        opacity:0;
+    }
+
+    #page2{
+        opacity:0;
+        /*-webkit-transform:translateY(-1000px);*/
+    }
+
+    #page3{
+        opacity:0;
+        /*-webkit-transform:translateY(-2000px);*/
+    }
+
+    #prelude{
+        position:relative;
+         /*-webkit-transform:translateZ(0);*/
+    }
+    #comicBBox,#cover{
+        left:0;
+        top:0;
+        -webkit-transform:translateZ(0);
+        position:absolute;
+    }
+    #contentBox{
+        -webkit-transform:translateZ(0);
+    }
+    #cover{
+        z-index:999
+    }
+    #comicBBox,#contentBox{
+        opacity:0
+    }
+
+    #comicBBox{
+        /*-webkit-transform:translateY(-1500px);*/
+        -webkit-transition:-webkit-transform 0.8s ease-in;
+    }
+    #smg{
+        opacity:0;
+    }
+    #canvas{
+        position:absolute;
+        left:0;
+        top:0;
+        display:none;
+        z-index:1000;
+    }
+
+
+    #shareBox{
+        width:100%;
+        height:100%;
+        position:absolute;
+        z-index:10002;
+        left:0;
+        top:0;
+        display: none;
+        background:url(./images/bg3.jpg);
+        background-size: cover;
+    }
+    #shareCover{
+        width:100%;
+        height: 850px;
+        background:url(./images/share.png);
+        background-size: cover;
+        
+    }
+    .ewm{
+        position: absolute;
+        left: 220px;
+        top: 275px;
+        width:200px;
+        height: 200px;
+        /*background:url(./images/ewm.jpg);
+        background-size:cover;*/
+    }
+    .ewm img{
+        width:100%;
+    }
+
+    #GradeBox{
+        width:100%;
+        height:100%;
+        position:absolute;
+        z-index:10001;
+        left:0;
+        top:0;
+        background:url(./images/bg3.jpg);
+        display: none;
+    }
+    #Grade{
+        width: 100%;
+        height: 680px;
+        background-image:url(./images/results.png);
+        background-position:0 0;
+
+    }
+    
+    .btns{
+        width:100%;
+        top:750px;
+        height: 140px;
+        background:url(./images/btn.png);
+        background-size:cover;
+        position:absolute
+    }
+    
+    .again{
+        width:50%;
+        position: absolute;
+        height: 100%;
+        left:50%;top:0;
+    }
+    .share{
+        width:50%;
+        position: absolute;
+        height: 100%;
+        left:0;top:0;
+    }
+    #comic1,
+    #comic2,
+    #comic3,
+    #comic4,
+    #comic5,
+    #comic6,
+    #comic7,
+    #comic8,
+    #comic9{
+        -webkit-transform:translateZ(0)
+    }

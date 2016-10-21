@@ -4,7 +4,9 @@ var canvas, stage, streaming;
 var POINTS = [4404,9267,13658,18050,22050,26150,29642,33070,35850,38652,40820,42844];
 
 //difficult coefficient
-var COE = [100,90,80,70,60,50,40,30,20,15,10,5]
+var COE = [100,90,80,70,60,50,40,30,20,15,10,5];
+// var LEVELRANGE = [10,55,80,90,95,99,100];
+var LEVELRANGE = [4,6,7,8,10,11,12];
 var ALLTURN = POINTS.length;
 var VARY_POINTS = POINTS.map(function(v,i,l){
     // if(i>0)
@@ -12,9 +14,6 @@ var VARY_POINTS = POINTS.map(function(v,i,l){
 
 }).slice(0,-1);
 VARY_POINTS.unshift(POINTS[0])
-
-
-
 
 //one trick time
 // var TIME = 44000;
@@ -39,9 +38,8 @@ var WAIT_TIME = VARY_POINTS.map(function(v,i){
 
 
 var doll,pulse,waterClip;
-window.onload = init;
 
-function init() {
+window.onload = function init() {
 	canvas = document.getElementById("canvas");
 	images = images||{};
 
@@ -49,16 +47,25 @@ function init() {
     loader.installPlugin(createjs.Sound);
 	loader.addEventListener("fileload", handleFileLoad);
 	loader.addEventListener("complete", handleComplete);
+    loader.addEventListener("progress", handleProgress);
 	loader.loadManifest(lib.properties.manifest);
 }
+//  = init;
 
 function handleFileLoad(evt) {
 	if (evt.item.type == "image") { images[evt.item.id] = evt.result; }
 }
 
+function handleProgress(e){
+    console.log(e.loaded);
+}
+
 var Game = {
     results:[],
     result:{},
+    
+    grades:0,
+    level:0,
     count:0,//detective the click times
     timer:0,//every game,it has a start time UTC
     init:function(){
@@ -155,19 +162,21 @@ var Game = {
 
     began:function(){
         // this.paused = false;
-        pulse.gotoAndPlay(0);
-
+        pulse.gotoAndPlay(1);
+         pulse.visible = true;
         createjs.Sound.play("music", createjs.Sound.INTERRUPT_EARLY, 0, 0, false);
         this.timer = new Date().getTime();
-
-
+       
         setTimeout(function(){
             streaming.visible = true;
-            streaming.gotoAndPlay(0);
+            streaming.gotoAndPlay(1);
             face.visible = false;
-            waterClip.gotoAndPlay(0);
+            waterClip.gotoAndPlay(1);
+            // pulse.gotoAndPlay(1);
+            waterClip.visible = true;
+            streaming.framerate = waterClip.framerate = pulse.framerate = 24;
             // waterClip.framerate = 60;
-            console.log("first streaming "+ streaming.framerate)
+            // console.log("first streaming "+ streaming.framerate)
             Game.clickable = true;
         },SHOW_TIME+FIRST_WAIT);
 
@@ -195,8 +204,15 @@ var Game = {
 
             setTimeout(function(){ 
                 // console.log(VARY_POINTS[Game.count]);
-                pulse.framerate = Math.round(lib.properties.fps*VARY_POINTS[0]/VARY_POINTS[Game.count+1]);
-                pulse.gotoAndPlay(1) 
+
+                //就是这
+                
+                if(Game.count == ALLTURN-1){
+                    setTimeout(Game.end,1000)
+                }else{
+                    pulse.framerate = Math.round(lib.properties.fps*VARY_POINTS[0]/VARY_POINTS[Game.count+1]);
+                    pulse.gotoAndPlay(1);
+                }
             },v+60);
 
                          
@@ -233,66 +249,136 @@ var Game = {
         if(offsetTime+COE[i]<POINTS[i]){
             return 1
         }else if(offsetTime-COE[i]<POINTS[i]<offsetTime+COE[i]){
+            Game.grades++
             return 0
         }else{
+ 
             return 2
         }
+    },
+    end:function(){
+        pulse.visible = waterClip.visible = false;
+        stage.addChildAt(lampMovie,1);
+        stage.on("click",function(){
+            Game.showGrade();
+            setTimeout(function(){
+                Game.grades = 0;
+                Game.level = 0;
+                Game.count = 0;
+                Game.timer = 0;
+                stage.removeChild(lampMovie);
+                streaming.framerate = waterClip.framerate = pulse.framerate = 24;
+            },500);
+
+
+            // console.log("ddd")
+        },null,true)
+    },
+    again:function(){
+        pulse.visible = true;
+        pulse.gotoAndPlay(1);
+        createjs.Sound.play("music", createjs.Sound.INTERRUPT_EARLY, 0, 0, false);
+        this.timer = new Date().getTime();
+       
+        setTimeout(function(){
+            streaming.visible = true;
+            streaming.gotoAndPlay(1);
+            face.visible = false;
+            waterClip.gotoAndPlay(1);
+     
+            waterClip.visible = true;
+            
+   
+            Game.clickable = true;
+        },SHOW_TIME+FIRST_WAIT);
+
+
+        this.timeEvent();
+    },
+    getGrade:function(){
+        // var grade = Math.round(Game.grades/ALLTURN*100);
+        var LEVELRANGE = [4,6,7,8,10,11,12];
+        var grade = Game.grades;
+        if(Game.grades == ALLTURN){
+            return 6
+        }else if(LEVELRANGE[4]<grade&&grade<=LEVELRANGE[5]){
+            return 5 
+        }else if(LEVELRANGE[3]<grade&&grade<=LEVELRANGE[4]){
+            return 4
+        }else if(LEVELRANGE[2]<grade&&grade<=LEVELRANGE[3]){
+            return 3
+        }else if(LEVELRANGE[1]<grade&&grade<=LEVELRANGE[2]){
+            return 2
+        }else if(LEVELRANGE[0]<grade&&grade<=LEVELRANGE[1]){
+            return 1
+        }else if(grade<LEVELRANGE[0]){
+            return 0
+        }
+    },
+    showGrade:function(){
+        
+        document.querySelector("#Grade").style.backgroundPosition = "-" + Game.getGrade()*640 + "px 0";
+        document.querySelector("#GradeBox").style.display = "block"
+    },
+    setup:function(){
+        streaming = new lib.streaming();
+        streaming.visible = false;
+        Game.init();
+        
+
+        lampMovie = new lib.lampMovie();
+        doll = new lib.doll();
+        pulse = new lib.pulse();
+        // pulse.framerate = 25;
+        face = new lib.face();
+        var background = new lib.bg();
+        var background2 = new lib.bg2();
+        var waterpipe = new lib.Waterpipe();
+        waterClip = new lib.waterClip();
+        waterpipe.setTransform(305.5,172.1,1,1,0,0,0,48.1,163.2);
+
+        stage = new createjs.Stage(canvas);
+
+        
+        stage.addChild(background);
+        stage.addChild(background2);
+        stage.addChild(doll);
+        stage.addChild(face);
+        stage.addChild(waterClip);
+        stage.addChild(streaming);
+        stage.addChild(pulse);
+        // WATER PIPE
+        stage.addChild(waterpipe);
+
+    
+
+        createjs.Touch.enable(stage);
+
+
+        setTimeout(function(){
+            Game.began();
+        },1000);
+
+
+        stage.update();
+
+        createjs.Ticker.setFPS(lib.properties.fps);
+        createjs.Ticker.addEventListener("tick", stage);
     }
+
 }
 
 function handleComplete(evt) {
-	streaming = new lib.streaming();
-    streaming.visible = false;
-    Game.init();
+      v = new Vivus('cover', {duration: 190,type:"oneByOne",start:"manual", animTimingFunction: Vivus.EASE,file: 'svg/cover.svg',onReady: function (myVivus) {
+                v.play();
+                Wel.index();
+            } 
+        });
+        createjs.Sound.play("sound1", createjs.Sound.INTERRUPT_EARLY, 0, 0, false);
 
-    doll = new lib.doll();
-    pulse = new lib.pulse();
-    // pulse.framerate = 25;
-    face = new lib.face();
-    var background = new lib.bg();
-    var waterpipe = new lib.Waterpipe();
-    waterClip = new lib.waterClip();
-	waterpipe.setTransform(305.5,172.1,1,1,0,0,0,48.1,163.2);
-
-	stage = new createjs.Stage(canvas);
-
-    stage.addChild(background);
-    stage.addChild(doll);
-    stage.addChild(face);
-    stage.addChild(waterClip);
-	stage.addChild(streaming);
-    stage.addChild(pulse);
-    // WATER PIPE
-	stage.addChild(waterpipe);
-
-    createjs.Touch.enable(stage);
-
-    // setTimeout(function(){
-    //     //showresult
-    //     Game.showResult(1);
-
-    //     setTimeout(function(){
-    //         //replace result with doll
-    //         // Game.showDoll();
-    //     },2000);
-
-    // },4500);
-
-
-    // stage.on("click",function(){
-    //     // pulse.began();
-    //     Game.began();
-    // })
-
-    setTimeout(function(){
-        Game.began();
-    },1000);
-
-
-	stage.update();
-
-	createjs.Ticker.setFPS(lib.properties.fps);
-	createjs.Ticker.addEventListener("tick", stage);
+        comicSVG = Snap("#comicBox");
+        ccSVG = Snap("#content");
+	// Game.setup();
 }
 
 function playSound(id, loop) {

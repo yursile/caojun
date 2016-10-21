@@ -4,7 +4,7 @@
 <svg version="1.1" id="first" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="640px" height="1136px" viewBox="0 0 640 1136" style="enable-background:new 0 0 640 1136;" xml:space="preserve">
 <g id="up">
-	<g id="XMLID_1557_">
+	<g id="XMLID_1557_" data-delay="10" data-duration="10">
 		
 			<path id="XMLID_1746_" style="fill:none;stroke:#040000;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
 			M56.147,504.731c-1.325,9.94-1.988,57.654,3.976,66.931"/>
@@ -38,7 +38,7 @@
 			<path id="XMLID_1736_" style="fill:none;stroke:#040000;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
 			M125.509,563.931c0,0,3.093,10.161,2.65,17.23"/>
 	</g>
-	<g id="XMLID_1747_">
+	<g id="XMLID_1747_" data-delay="1000" data-duration="10">
 		
 			<path id="XMLID_1735_" style="fill:none;stroke:#040000;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
 			M144.506,502.522c0,0,8.836,30.483,11.045,33.134"/>
@@ -62,7 +62,7 @@
 			M182.5,537.866c0,0,1.767,19.88,3.313,29.158c1.524,9.151,5.301,11.707,18.334,7.953c13.69-3.945,18.918-4.602,14.138-12.15"/>
 	</g>
 	
-	<g id="XMLID_1748_">
+	<g id="XMLID_1748_" data-delay="200" data-duration="10">
 		
 			<path id="XMLID_1727_" style="fill:none;stroke:#040000;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
 			M237.724,506.94c0,0,5.743,29.6,4.418,49.039"/>
@@ -88,7 +88,7 @@
 			M287.646,513.567c0,0,10.161,11.487,15.021,17.672"/>
 	</g>
 
-	<g id="XMLID_1749_">
+	<g id="XMLID_1749_" data-delay="300" data-duration="10">
 		
 			<path id="XMLID_1716_" style="fill:none;stroke:#040000;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
 			M327.849,497.663c0,0,6.186-12.37,14.138-18.997"/>
@@ -120,14 +120,14 @@
 			M345.741,531.018c0,0-12.812,11.045-18.997,15.463"/>
 	</g>
 	
-	<path id="XMLID_1717_" data-delay="10000" data-duration="10" style="fill:none;stroke:#040000;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
+	<path id="XMLID_1717_" data-delay="1000" data-duration="10" style="fill:none;stroke:#040000;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
 	M330.5,382.576c-1.326-8.836-8.395-19.881-15.904-22.532c-7.511-2.65-25.183-0.883-20.765,8.394
 	c4.418,9.278,17.229,12.812,17.229,12.812"/>
 
-	<path id="XMLID_1718_" style="fill:none;stroke:#040000;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
+	<path id="XMLID_1718_" data-delay="1000" data-duration="10" style="fill:none;stroke:#040000;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
 	M342.207,400.689c0,0,6.185,11.928,18.113,11.928s26.065-10.603,16.347-19.438c-7.526-6.842-22.311-0.442-22.311-0.442"/>
 
-	<path id="XMLID_1719_" style="fill:none;stroke:#040000;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
+	<path id="XMLID_1719_" data-delay="1000" data-duration="10" style="fill:none;stroke:#040000;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
 	M293.609,475.352c-0.441-6.185-9.719-51.689,38.878-80.848"/>
 	
 

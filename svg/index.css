@@ -1,0 +1,111 @@
+    *{
+        margin:0;
+        padding:0;
+    }
+    body{
+        background:url(./images/bg3.jpg)
+    }
+    html,body,#prelude{
+        width:100%;
+        height:100%;
+        overflow:hidden;
+    }
+    body{
+       /*background-color:#D4D4D4;*/
+       max-width:640px;
+       margin:0 auto;
+    }
+    #svg,#cover,#comicBox,#comicBBox,#content,#canvas{
+        width:100%;
+    }
+
+    #hu{
+        -webkit-transform-origin:center;
+        transform-origin:center;
+        -webkit-transform:translateY(500px) scale(0.01);
+    }
+
+    #hu.animate{
+        -webkit-transform:translateY(0) scale(1);
+        -webkit-transition:all 0.4s linear;
+    }
+
+    #doll1,#aha{
+        opacity:0;
+    }
+
+    #page2{
+        opacity:0;
+        /*-webkit-transform:translateY(-1000px);*/
+    }
+
+    #page3{
+        opacity:0;
+        /*-webkit-transform:translateY(-2000px);*/
+    }
+
+    #prelude{
+        position:relative;
+    }
+    #comicBBox,#cover{
+        left:0;
+        top:0;
+        -webkit-transform:translateZ(0);
+        position:absolute;
+    }
+    #cover{
+        z-index:999
+    }
+    #comicBBox,#contentBox{
+        opacity:0
+    }
+
+    #comicBBox{
+        /*-webkit-transform:translateY(-1500px);*/
+        -webkit-transition:-webkit-transform 6s linear 2s;
+    }
+    #smg{
+        opacity:0;
+    }
+    #canvas,#lamb{
+        position:absolute;
+        left:0;
+        top:0;
+        /*display:none;*/
+        z-index:1000;
+    }
+    #lamb{
+        /*z-index:*/
+    }
+
+    #Grade{
+        width:100%;
+        height:100%;
+        position:absolute;
+        z-index:10001;
+        left:0;
+        top:0;
+        /*background:url(./images/)*/
+    }
+    
+    .btns{
+        width:100%;
+        top:600px;
+        height: 140px;
+        background:url(./images/btn.png);
+        background-size:cover;
+        position:absolute;
+    }
+
+    .again{
+        width:50%;
+        position: absolute;
+        height: 100%;
+        left:0;top:0;
+    }
+    .share{
+        width:50%;
+        position: absolute;
+        height: 100%;
+        left:50%;top:0;
+    }
