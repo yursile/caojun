@@ -369,6 +369,7 @@ var Game = {
 }
 
 function handleComplete(evt) {
+    console.log(evt)
       v = new Vivus('cover', {duration: 190,type:"oneByOne",start:"manual", animTimingFunction: Vivus.EASE,file: 'svg/cover.svg',onReady: function (myVivus) {
                 v.play();
                 Wel.index();
@@ -376,7 +377,7 @@ function handleComplete(evt) {
         });
         createjs.Sound.play("sound1", createjs.Sound.INTERRUPT_EARLY, 0, 0, false);
 
-        comicSVG = Snap("#comicBox");
+        comicSVG = Snap("#comicBBox");
         ccSVG = Snap("#content");
 	// Game.setup();
 }

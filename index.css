@@ -163,3 +163,7 @@
     #comic9{
         -webkit-transform:translateZ(0)
     }
+    #comic{
+        width:100%;
+        height: 100%;
+    }
