@@ -68,7 +68,7 @@
 
     #comicBBox{
         /*-webkit-transform:translateY(-1500px);*/
-        -webkit-transition:-webkit-transform 0.8s ease-in;
+        /*-webkit-transition:-webkit-transform 0.8s ease-in;*/
     }
     #smg{
         opacity:0;
